@@ -21,13 +21,13 @@ Overwrites the existing API key file without prompting for confirmation.
 ### Usage Examples
 1. Set the API key for the first time
 ```PowerShell
-Set-VTApiKey -ApiKey 'your_long_api_key_here'
+Set-ApiKey -ApiKey 'your_long_api_key_here'
 ```
 This command securely saves your API key. If a key already exists, it will prompt for confirmation before overwriting.
 
 2. Overwrite an existing key without a prompt
 ```PowerShell
-Set-VTApiKey -ApiKey 'a_new_api_key' -Force
+Set-ApiKey -ApiKey 'a_new_api_key' -Force
 ```
 _This command uses the -Force switch to immediately overwrite any previously saved API key._
 
