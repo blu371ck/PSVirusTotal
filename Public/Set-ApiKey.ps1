@@ -1,4 +1,4 @@
-function Set-VTApiKey {
+function Set-ApiKey {
    <#
     .SYNOPSIS
         Securely saves or overwrites the VirusTotal API key for future use.

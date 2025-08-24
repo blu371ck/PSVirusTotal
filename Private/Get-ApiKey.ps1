@@ -1,4 +1,4 @@
-function Get-VTApiKey {
+function Get-ApiKey {
 <#
 .SYNOPSIS
     Retrieves and decrypts the saved VirusTotal API key. (Internal use only)

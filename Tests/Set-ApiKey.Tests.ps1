@@ -1,4 +1,4 @@
-Describe 'Set-VTApiKey' -Tags 'Unit' {
+Describe 'Set-ApiKey' -Tags 'Unit' {
 
     BeforeAll {
         $mockApiKey = '12345-abcde-67890-fghij'
@@ -37,19 +37,19 @@ Describe 'Set-VTApiKey' -Tags 'Unit' {
     
     # Test Case 1: Check if the function creates the configuration directory if it doesn't exist.
     It 'Creates the VTPowerShell directory if it does not exist' {
-        Set-VTApiKey -ApiKey $mockApiKey -Force
+        Set-ApiKey -ApiKey $mockApiKey -Force
         Test-Path -Path $configPath | Should -BeTrue
     }
 
     # Test Case 2: Check if the API key file is created.
     It 'Creates the apikey.xml file' {
-        Set-VTApiKey -ApiKey $mockApiKey -Force
+        Set-ApiKey -ApiKey $mockApiKey -Force
         Test-Path -Path $keyFilePath | Should -BeTrue
     }
 
     # Test Case 3: Verify that the saved key is correct and encrypted.
     It 'Saves the correct API key in an encrypted format' {
-        Set-VTApiKey -ApiKey $mockApiKey -Force
+        Set-ApiKey -ApiKey $mockApiKey -Force
 
         # Import the encrypted key from the file
         $secureKey = Import-CliXml -Path $keyFilePath
@@ -67,7 +67,7 @@ Describe 'Set-VTApiKey' -Tags 'Unit' {
         "old-key" | Export-CliXml -Path $keyFilePath
 
         # Run the function with a new key and the -Force switch
-        Set-VTApiKey -ApiKey $mockApiKey -Force
+        Set-ApiKey -ApiKey $mockApiKey -Force
 
         # The key in the file should now be the new one
         $secureKey = Import-CliXml -Path $keyFilePath
@@ -85,7 +85,7 @@ Describe 'Set-VTApiKey' -Tags 'Unit' {
         $secureOldKey | Export-CliXml -Path $keyFilePath
 
         # Run the function with -WhatIf. This causes ShouldProcess to return false.
-        Set-VTApiKey -ApiKey $mockApiKey -WhatIf
+        Set-ApiKey -ApiKey $mockApiKey -WhatIf
 
         # The key in the file should still be the old, unchanged one.
         $secureKey = Import-CliXml -Path $keyFilePath
