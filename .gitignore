@@ -1,0 +1,65 @@
+# ===================================================================
+# General
+# ===================================================================
+
+# Operating System generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# ===================================================================
+# Visual Studio Code
+# ===================================================================
+
+# User-specific workspace settings and history
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Local history for extensions
+.history/
+
+# ===================================================================
+# PowerShell
+# ===================================================================
+
+# PowerShell session history files
+*History.txt
+
+# Backup files for module manifests
+*.psd1.bak
+
+# User-specific PSScriptAnalyzer settings file
+PSScriptAnalyzerSettings.psd1
+
+# Credentials and sensitive data
+# IMPORTANT: Never commit API keys or credentials to source control.
+# This matches the file created by your Set-VTApiKey function.
+apikey.xml
+
+# ===================================================================
+# Pester (PowerShell Testing Framework)
+# ===================================================================
+
+# Pester test results and code coverage reports
+TestResults/
+CodeCoverage/
+*.xml
+*.html
+*.nunit
+
+# ===================================================================
+# Build & Packaging Artifacts
+# ===================================================================
+
+# Common folders for build output
+/output/
+/bin/
+/obj/
+/release/
+
+# Packaged module files
+*.nupkg
+*.zip
