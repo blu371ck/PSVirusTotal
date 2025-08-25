@@ -3,7 +3,8 @@ PowerShell script that interacts with VirusTotal APIs.
 
 Work in progress!
 
-## Command Reference
+# Command Reference
+## IP Addresses
 ### `Set-VTApiKey`
 This function securely saves or overwrites your VirusTotal API key for future use by other scripts.
 
@@ -181,4 +182,68 @@ Get-IpAddressVotes -IpAddress 8.8.8.8
 This command retrieves all votes for the IP address 34.98.99.30 and saves the complete results to a JSON file.
 ```powershell
 Get-IpAddressVotes -IpAddress 34.98.99.30 -OutFile "C:\Reports\votes.json"
+```
+
+---
+### `Request-IpAddressRescan`
+Requests that VirusTotal perform a new analysis (a "rescan") on a given IP address. This is useful for refreshing outdated information.
+
+### Syntax
+```
+Request-IpAddressRescan -IpAddress <IPAddress>
+```
+
+### Parameters
+- `-IpAddress` (Required)
+The IP address you want to request a rescan for.
+
+### Example
+1. Submitting a rescan request
+This command submits a request to VirusTotal to start a new analysis on the IP address 8.8.8.8. The command returns an analysis object, which contains a unique ID and a URL where the pending report can be viewed.
+
+```powershell
+Request-IpAddressRescan -IpAddress 8.8.8.8
+```
+
+---
+### `Set-IpAddressVote`
+Submits a community vote for a given IP address to VirusTotal. The vote can be either "harmless" or "malicious".
+
+### Syntax
+```
+Set-IpAddressVote -IpAddress <IPAddress> -Verdict <String>
+```
+
+### Parameters
+- `-IpAddress` (Required)
+The IP address you are submitting a vote for.
+- `-Verdict` (Required)
+The verdict you are casting. The only valid options are harmless and malicious.
+
+### Example
+1. Submit a 'malicious' vote for an IP
+This command submits a 'malicious' vote for the IP address 198.51.100.10. The command will return a confirmation object from the API upon success.
+```powershell
+Set-IpAddressVote -IpAddress 198.51.100.10 -Verdict 'malicious'
+```
+
+---
+### `Add-IpAddressComment`
+Submits a text comment for a given IP address to the VirusTotal community.
+
+### Syntax
+```
+Add-IpAddressComment -IpAddress <IPAddress> -Comment <String>
+```
+### Parameters
+- `-IpAddress` (Required)
+The IP address you are submitting a comment for.
+- `-Comment` (Required)
+The text content of your comment.
+
+### Example
+1. Submit a comment for an IP address
+This command submits a comment for the IP address 8.8.8.8. The command will return a confirmation object from the API upon success.
+```powershell
+Add-IpAddressComment -IpAddress 8.8.8.8 -Comment "This is the primary public DNS server for Google."
 ```
