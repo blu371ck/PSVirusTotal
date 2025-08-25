@@ -247,3 +247,31 @@ This command submits a comment for the IP address 8.8.8.8. The command will retu
 ```powershell
 Add-IpAddressComment -IpAddress 8.8.8.8 -Comment "This is the primary public DNS server for Google."
 ```
+
+---
+### `Get-DomainReport`
+Retrieves a comprehensive report for a given domain name from the VirusTotal API.
+
+### Syntax
+```
+Get-DomainReport -Domain <String> [-OutFile <String>]
+```
+
+### Parameters
+- `-Domain` (Required)
+The domain name you want to query (e.g., "https://www.google.com/search?q=google.com").
+- `-OutFile` (Optional)
+Specifies a file path where the report should be saved. If provided, the full JSON report will be written to this file. If omitted, the report object will be displayed in the console.
+### Examples
+1. Displaying a report in the console
+This command retrieves the report for the domain google.com and displays the results as a PowerShell object in the terminal.
+```powershell
+Get-DomainReport -Domain "google.com"
+```
+2. Saving a report to a JSON file
+This command retrieves the report for the domain github.com and saves it as a formatted JSON file in the C:\Reports directory.
+```powershell
+Get-DomainReport -Domain "github.com" -OutFile "C:\Reports\github_report.json"
+```
+
+---

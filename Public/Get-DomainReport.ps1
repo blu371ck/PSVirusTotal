@@ -1,21 +1,23 @@
-function Get-IpAddressVotes {
+function Get-DomainReport {
    <#
     .SYNOPSIS
-        Retrieves VirusTotal vote objects from an IP address.
+        Retrieves a VirusTotal report for provided domain.
     .DESCRIPTION
-        This function requests an IP address Votes object from VirusTotal.
-    .PARAMETER IpAddress
-        The IP address to request a VirusTotal report for.
-    .PARAMETER OutFile
-        A file path to save the response in.
+        Retrieves a VirusTotal report for provided domain.
+    .PARAMETER Domain
+        The domain to request a VirusTotal report for.
     .EXAMPLE
-        Get-IpAddressVotes -IpAddress <IP_ADDRESS_HERE>
-        # This command retrieves the vote objects for the IP address <IP_ADDRESS_HERE>
+        Get-DomainReport -Domain <DOMAIN>
+        # This command retrieves the report for the domain <DOMAIN>
+    .EXAMPLE
+        Get-DomainReport -Domain <DOMAIN> -OutFile <FILE_LOCATION_HERE>
+        # This command retrieves the report for the domain <DOMAIN> and
+        # saves it in <FILE_LOCATION_HERE>
     #> 
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage="Ip Address to get votes on.")]
-        [ipaddress]$IpAddress,
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage="Domain to get report for.")]
+        [string]$Domain,
         [Parameter(Mandatory=$false, HelpMessage="File path to store results in.")]
         [string]$OutFile
     )
@@ -31,8 +33,8 @@ function Get-IpAddressVotes {
         }
 
         # Build the URI and notify the user request is about to begin.
-        $uri = "https://www.virustotal.com/api/v3/ip_addresses/$IpAddress/votes"
-        Write-Host "Fetching vote objects from VirusTotal for '$IpAddress'..."
+        $uri = "https://www.virustotal.com/api/v3/domains/$Domain"
+        Write-Host "Fetching report from VirusTotal for '$Domain'..."
         
         # Use Invoke-RestMethod to automatically parse response JSON
         $responseObject = Invoke-RestMethod -Uri $uri -Method GET -Headers $headers
@@ -48,6 +50,6 @@ function Get-IpAddressVotes {
         }
     }
     catch {
-        Write-Error "Failed to get votes from VirusTotal for '$IpAddress'. Error: $_"
+        Write-Error "Failed to get report from VirusTotal for '$Domain'. Error: $_"
     }
 }

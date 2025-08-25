@@ -1,21 +1,21 @@
-function Get-IpAddressComments {
+function Get-DomainComments {
    <#
     .SYNOPSIS
-        Retrieves VirusTotal IP address comments.
+        Retrieves VirusTotal domain comments.
     .DESCRIPTION
-        This function requests the comments from an IP address on VirusTotal.
-    .PARAMETER IpAddress
-        The IP address to request VirusTotal comments on.
+        Retrieves VirusTotal domain comments.
+    .PARAMETER Domain
+        The domain request VirusTotal comments on.
     .PARAMETER Limit
         The maximum limit of comments to retrieve. Defaults to 10
     .EXAMPLE
-        Get-IpAddressReport -IpAddress <IP_ADDRESS_HERE>
-        # This command retrieves the report for the IP address <IP_ADDRESS_HERE>
+        Get-DomainComments -Domain <DOMAIN>
+        # This command retrieves the report for the domain <DOMAIN>
     #> 
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage="Ip Address to get comments on.")]
-        [ipaddress]$IpAddress,
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage="Domain to get comments on.")]
+        [string]$Domain,
         [Parameter(Mandatory=$false, HelpMessage="Maximum number of comments to retrieve.")]
         [int]$Limit = 10,
         [Parameter(Mandatory=$false, HelpMessage="File path to store results in.")]
@@ -33,8 +33,8 @@ function Get-IpAddressComments {
         }
 
         # Build the URI and notify the user request is about to begin.
-        $uri = "https://www.virustotal.com/api/v3/ip_addresses/$IpAddress/comments?limit=$Limit"
-        Write-Host "Fetching '$Limit' comments from VirusTotal for '$IpAddress'..."
+        $uri = "https://www.virustotal.com/api/v3/domains/$Domain/comments?limit=$Limit"
+        Write-Host "Fetching '$Limit' comments from VirusTotal for '$Domain'..."
 
         # Use Invoke-RestMethod to automatically parse response JSON
         $responseObject = Invoke-RestMethod -Uri $uri -Method GET -Headers $headers
@@ -50,6 +50,6 @@ function Get-IpAddressComments {
         }
     }
     catch {
-        Write-Error "Failed to get comments from VirusTotal for '$IpAddress'. Error: $_"
+        Write-Error "Failed to get comments from VirusTotal for '$Domain'. Error: $_"
     }
 }

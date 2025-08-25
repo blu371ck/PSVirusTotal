@@ -13,9 +13,9 @@ function Add-IpAddressComment {
     #> 
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage="Ip Address to re-scan")]
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage="Ip Address to comment on.")]
         [ipaddress]$IpAddress,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true, HelpMessage="Comment string to submit for IP address.")]
         [string]$Comment
     )
 

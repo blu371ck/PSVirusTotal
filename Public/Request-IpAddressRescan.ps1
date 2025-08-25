@@ -12,7 +12,7 @@ function Request-IpAddressRescan {
     #> 
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage="Ip Address to re-scan")]
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage="Ip Address to request re-scan for.")]
         [ipaddress]$IpAddress
     )
 

@@ -23,10 +23,10 @@ function Get-IpAddressObjectDescriptors {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage="IP Address to get object descriptors for.")]
         [ipaddress]$IpAddress,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true, HelpMessage="List of available relationships: https://docs.virustotal.com/reference/ip-object#relationships")]
         [ValidateSet(
             'comments',
             'communicating_files',
@@ -43,10 +43,10 @@ function Get-IpAddressObjectDescriptors {
         )]
         [string]$Relationship,
 
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false, HelpMessage="Maximum number of object descriptors to retrieve.")]
         [int]$Limit = 10,
 
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false, HelpMessage="File path to store results in.")]
         [string]$OutFile
     )
 

@@ -16,9 +16,9 @@ function Get-IpAddressReport {
     #> 
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage="Ip Address to get report for")]
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage="Ip Address to get report for.")]
         [ipaddress]$IpAddress,
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false, HelpMessage="File path to store results in.")]
         [string]$OutFile
     )
 

@@ -10,17 +10,10 @@ function Set-ApiKey {
         Your personal VirusTotal API key.
     .PARAMETER Force
         Overwrites the existing API key file without prompting for confirmation.
-    .EXAMPLE
-        Set-VTApiKey -ApiKey 'your_long_api_key_here'
-        # Prompts for confirmation if a key file already exists.
-
-    .EXAMPLE
-        Set-VTApiKey -ApiKey 'a_new_api_key' -Force
-        # Overwrites the existing key file without asking.
     #> 
     [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'High')]
     param (
-        [Parameter(Mandatory = $true, HelpMessage = "Enter your VirusTotal API key.")]
+        [Parameter(Mandatory = $true)]
         [string]$ApiKey,
         [Parameter(Mandatory = $false)]
         [switch]$Force

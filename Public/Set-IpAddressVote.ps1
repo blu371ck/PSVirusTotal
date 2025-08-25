@@ -14,9 +14,9 @@ function Set-IpAddressVote {
     #> 
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage="Ip Address to re-scan")]
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage="Ip Address to submit a vote on.")]
         [ipaddress]$IpAddress,
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true, HelpMessage="Verdict decision, 'harmless' or 'malicious'.")]
         [ValidateSet(
             'harmless',
             'malicious'

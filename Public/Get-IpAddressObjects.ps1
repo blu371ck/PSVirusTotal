@@ -23,10 +23,10 @@ function Get-IpAddressObjects {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage="IP Address to get objects on.")]
         [ipaddress]$IpAddress,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory=$true, HelpMessage="Relationships to search for: https://docs.virustotal.com/reference/ip-object#relationships")]
         [ValidateSet(
             'comments',
             'communicating_files',
@@ -43,10 +43,10 @@ function Get-IpAddressObjects {
         )]
         [string]$Relationship,
 
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false, HelpMessage="Maximum number of objects to retrieve from IP address.")]
         [int]$Limit = 10,
 
-        [Parameter(Mandatory=$false)]
+        [Parameter(Mandatory=$false, HelpMessage="File path to store results to.")]
         [string]$OutFile
     )
 
