@@ -147,12 +147,38 @@ Specifies a file path where the results should be saved. If provided, the full J
 
 ### Examples
 1. Get all DNS resolutions for an IP
-This command retrieves all historical DNS resolution descriptors for the IP address 8.8.8.8 and displays them in the console.
+This command retrieves all historical resolution descriptors for the IP address 8.8.8.8 and displays them in the console.
 ```powershell
 Get-IpAddressObjectDescriptors -IpAddress 8.8.8.8 -Relationship resolutions
 ```
 2. Get all URLs associated with an IP and save to a file
 This command retrieves all URL descriptors known to be associated with the IP address 34.98.99.30 and saves the complete results to a JSON file.
 ```powershell
-Get-IpAddressObjectDescriptors -IpAddress 34.98.99.30 -Relationship urls -OutFile "C:\Reports\related_urls.json"
+Get-IpAddressObjectDescriptors -IpAddress 34.98.99.30 -Relationship urls -OutFile "C:\Reports\related_url_descriptors.json"
+```
+
+---
+### `Get-IpAddressVotes`
+Retrieves votes related to a given IP address from the VirusTotal API. 
+
+### Syntax
+```
+Get-IpAddressVotes -IpAddress <IPAddress> [-OutFile <String>]
+```
+### Parameters
+- `-IpAddress` (Required)
+The IP address for which you want to retrieve votes.
+- `-OutFile` (Optional)
+Specifies a file path where the results should be saved. If provided, the full JSON response will be written to this file. If omitted, the results are returned as PowerShell objects to the console.
+
+### Examples
+1. Get all votes for an IP
+This command retrieves all votes for the IP address 8.8.8.8 and displays them in the console.
+```powershell
+Get-IpAddressVotes -IpAddress 8.8.8.8
+```
+2. Get all votes for an IP and save to a file
+This command retrieves all votes for the IP address 34.98.99.30 and saves the complete results to a JSON file.
+```powershell
+Get-IpAddressVotes -IpAddress 34.98.99.30 -OutFile "C:\Reports\votes.json"
 ```
