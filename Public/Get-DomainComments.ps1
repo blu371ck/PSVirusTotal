@@ -1,52 +1,80 @@
 function Get-DomainComments {
    <#
     .SYNOPSIS
-        Retrieves VirusTotal domain comments.
+        Retrieves community comments for a domain from VirusTotal.
     .DESCRIPTION
-        Retrieves VirusTotal domain comments.
+        This function retrieves community comments for a given domain from the VirusTotal API.
+        It automatically handles pagination to retrieve all available comments.
     .PARAMETER Domain
-        The domain request VirusTotal comments on.
+        The domain to request VirusTotal comments for.
     .PARAMETER Limit
-        The maximum limit of comments to retrieve. Defaults to 10
+        The number of comments to retrieve per API request. Defaults to 10
+    .PARAMETER OutFile
+        Specifies a file path to save the comments to.
     .EXAMPLE
-        Get-DomainComments -Domain <DOMAIN>
-        # This command retrieves the report for the domain <DOMAIN>
+        Get-DomainComments -Domain "google.com"
+        # This command retrieves all comments for the domain "google.com".
     #> 
     [CmdletBinding()]
     param(
         [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage="Domain to get comments on.")]
         [string]$Domain,
-        [Parameter(Mandatory=$false, HelpMessage="Maximum number of comments to retrieve.")]
+
+        [Parameter(Mandatory=$false, HelpMessage="Number of comments to retrieve per page.")]
         [int]$Limit = 10,
+
         [Parameter(Mandatory=$false, HelpMessage="File path to store results in.")]
         [string]$OutFile
     )   
 
     try {
-        # Retrieve the API key from private helper function.
+        # Retrieve the API key from the private helper function.
         $apiKey = Get-ApiKey
 
-        # documentation on this api added the "accept: application/json" so we do the same.
         $headers = @{
             "x-apikey" = $apiKey;
             "Accept" = "application/json"
         }
 
-        # Build the URI and notify the user request is about to begin.
-        $uri = "https://www.virustotal.com/api/v3/domains/$Domain/comments?limit=$Limit"
-        Write-Host "Fetching '$Limit' comments from VirusTotal for '$Domain'..."
+        # This list will store all the results from all pages.
+        $allResults = [System.Collections.Generic.List[object]]::new()
+        $cursor = $null
+        $pageCount = 1
 
-        # Use Invoke-RestMethod to automatically parse response JSON
-        $responseObject = Invoke-RestMethod -Uri $uri -Method GET -Headers $headers
+        Write-Host "Fetching comments from VirusTotal for '$Domain'..."
+
+        do {
+            $baseUri = "https://www.virustotal.com/api/v3/domains/$Domain/comments?limit=$Limit"
+            $uri = if ($cursor) { "$baseUri&cursor=$cursor" } else { $baseUri }
+
+            Write-Verbose "Querying page $pageCount with URI: $uri"
+            $response = Invoke-RestMethod -Uri $uri -Method GET -Headers $headers
+
+            if ($response.data) {
+                $allResults.AddRange($response.data)
+                Write-Host "Retrieved $($response.data.Count) comments..."
+            }
+
+            # Check for a cursor to get the next page of results.
+            $cursor = $response.meta.cursor
+            
+            if ($cursor) {
+                Write-Host "Continuation cursor found, fetching next page..."
+                $pageCount++
+            }
+
+        } while ($cursor -and $allResults.Count -lt $Limit)
+
+        Write-Host "Finished fetching. Total comments: $($allResults.Count)."
         
-        # If the -OutFile switch is provided, write the output to that path instead
         if ($PSBoundParameters.ContainsKey('OutFile')) {
             Write-Verbose "Saving comments to path: $OutFile"
-            $responseObject | ConvertTo-Json -Depth 100 | Out-File -FilePath $OutFile -Encoding utf8
+            $allResults | ConvertTo-Json -Depth 100 | Out-File -FilePath $OutFile -Encoding utf8
             Write-Host "Comments successfully saved to '$OutFile'."
-        } # else just print it out to screen
+        }
         else {
-            $responseObject | ConvertTo-Json -Depth 100
+            # Return the rich PowerShell object to the pipeline.
+            $allResults | ConvertTo-Json
         }
     }
     catch {

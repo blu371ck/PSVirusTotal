@@ -88,7 +88,7 @@ function Get-IpAddressObjects {
                 $pageCount++
             }
 
-        } while ($cursor) # The loop continues as long as the API provides a cursor.
+        } while ($cursor -and $allResults.Count -lt $Limit) # The loop continues as long as the API provides a cursor.
 
         Write-Host "Finished fetching. Total results: $($allResults.Count)."
 

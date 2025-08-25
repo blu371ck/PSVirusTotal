@@ -32,21 +32,45 @@ function Get-IpAddressComments {
             "Accept" = "application/json"
         }
 
-        # Build the URI and notify the user request is about to begin.
-        $uri = "https://www.virustotal.com/api/v3/ip_addresses/$IpAddress/comments?limit=$Limit"
-        Write-Host "Fetching '$Limit' comments from VirusTotal for '$IpAddress'..."
+        # This list will store all the results from all pages.
+        $allResults = [System.Collections.Generic.List[object]]::new()
+        $cursor = $null
+        $pageCount = 1
 
-        # Use Invoke-RestMethod to automatically parse response JSON
-        $responseObject = Invoke-RestMethod -Uri $uri -Method GET -Headers $headers
+        Write-Host "Fetching comments from VirusTotal for '$IpAddress'..."
+
+        do {
+            $baseUri = "https://www.virustotal.com/api/v3/ip_addresses/$IpAddress/comments?limit=$Limit"
+            $uri = if ($cursor) { "$baseUri&cursor=$cursor" } else { $baseUri }
+
+            Write-Verbose "Querying page $pageCount with URI: $uri"
+            $response = Invoke-RestMethod -Uri $uri -Method GET -Headers $headers
+
+            if ($response.data) {
+                $allResults.AddRange($response.data)
+                Write-Host "Retrieved $($response.data.Count) comments..."
+            }
+
+            # Check for a cursor to get the next page of results.
+            $cursor = $response.meta.cursor
+            
+            if ($cursor) {
+                Write-Host "Continuation cursor found, fetching next page..."
+                $pageCount++
+            }
+
+        } while ($cursor -and $allResults -lt $Limit)
+
+        Write-Host "Finished fetching. Total comments: $($allResults.Count)."
         
-        # If the -OutFile switch is provided, write the output to that path instead
         if ($PSBoundParameters.ContainsKey('OutFile')) {
             Write-Verbose "Saving comments to path: $OutFile"
-            $responseObject | ConvertTo-Json -Depth 100 | Out-File -FilePath $OutFile -Encoding utf8
+            $allResults | ConvertTo-Json -Depth 100 | Out-File -FilePath $OutFile -Encoding utf8
             Write-Host "Comments successfully saved to '$OutFile'."
-        } # else just print it out to screen
+        }
         else {
-            $responseObject | ConvertTo-Json -Depth 100
+            # Return the rich PowerShell object to the pipeline.
+            $allResults | ConvertTo-Json
         }
     }
     catch {
