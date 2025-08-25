@@ -1,17 +1,17 @@
 function Get-ApiKey {
-<#
-.SYNOPSIS
-    Retrieves and decrypts the saved VirusTotal API key. (Internal use only)
-.DESCRIPTION
-    This private function locates the encrypted API key file, imports the SecureString,
-    and converts it back to a plain-text string for use in other module commands.
-    If the key file is not found, it will throw an error.
-.OUTPUTS
-    System.String
-    Returns the plain-text VirusTotal API key.
-.NOTES
-    This is a private function and is not intended to be called directly by the end-user.
-#>
+    <#
+    .SYNOPSIS
+        Retrieves and decrypts the saved VirusTotal API key. (Internal use only)
+    .DESCRIPTION
+        This private function locates the encrypted API key file, imports the SecureString,
+        and converts it back to a plain-text string for use in other module commands.
+        If the key file is not found, it will throw an error.
+    .OUTPUTS
+        System.String
+        Returns the plain-text VirusTotal API key.
+    .NOTES
+        This is a private function and is not intended to be called directly by the end-user.
+    #>
     [CmdletBinding()]
     param()
 
