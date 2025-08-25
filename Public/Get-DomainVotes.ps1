@@ -1,21 +1,21 @@
-function Get-IpAddressVotes {
+function Get-DomainVotes {
    <#
     .SYNOPSIS
-        Retrieves VirusTotal vote objects from an IP address.
+        Retrieves VirusTotal vote objects from a domain.
     .DESCRIPTION
-        This function requests an IP address Votes object from VirusTotal.
-    .PARAMETER IpAddress
-        The IP address to request a VirusTotal votes for.
+        This function requests a domains Votes object from VirusTotal.
+    .PARAMETER Domain
+        The domain to request a VirusTotal votes for.
     .PARAMETER OutFile
         A file path to save the response in.
     .EXAMPLE
-        Get-IpAddressVotes -IpAddress <IP_ADDRESS_HERE>
-        # This command retrieves the vote objects for the IP address <IP_ADDRESS_HERE>
+        Get-DomainVotes -Domain <DOMAIN>
+        # This command retrieves the vote objects for the domain <DOMAIN>
     #> 
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage="Ip Address to get votes on.")]
-        [ipaddress]$IpAddress,
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage="Domain to get votes on.")]
+        [string]$Domain,
         [Parameter(Mandatory=$false, HelpMessage="File path to store results in.")]
         [string]$OutFile
     )
@@ -31,8 +31,8 @@ function Get-IpAddressVotes {
         }
 
         # Build the URI and notify the user request is about to begin.
-        $uri = "https://www.virustotal.com/api/v3/ip_addresses/$IpAddress/votes"
-        Write-Host "Fetching vote objects from VirusTotal for '$IpAddress'..."
+        $uri = "https://www.virustotal.com/api/v3/domains/$Domain/votes"
+        Write-Host "Fetching vote objects from VirusTotal for '$Domain'..."
         
         # Use Invoke-RestMethod to automatically parse response JSON
         $responseObject = Invoke-RestMethod -Uri $uri -Method GET -Headers $headers
@@ -48,6 +48,6 @@ function Get-IpAddressVotes {
         }
     }
     catch {
-        Write-Error "Failed to get votes from VirusTotal for '$IpAddress'. Error: $_"
+        Write-Error "Failed to get votes from VirusTotal for '$Domain'. Error: $_"
     }
 }

@@ -8,7 +8,7 @@ function Request-IpAddressRescan {
     .PARAMETER IpAddress
         The IP address to request VirusTotal to re-scan
     .EXAMPLE
-        Get-IpAddressReport -IpAddress <IP_ADDRESS_HERE>
+        Request-IpAddressRescan -IpAddress <IP_ADDRESS_HERE>
     #> 
     [CmdletBinding()]
     param(

@@ -1,12 +1,12 @@
-function Get-IpAddressObjects {
+function Get-DomainObjectDescriptors {
     <#
     .SYNOPSIS
-        Retrieves related objects for an IP address from VirusTotal.
+        Retrieves related object descriptors for a domain from VirusTotal.
     .DESCRIPTION
-        This function queries the VirusTotal API for objects related to a specific IP address.
+        This function queries the VirusTotal API for object descriptors related to a specific domain.
         It handles pagination automatically by following the continuation cursor to retrieve all available results.
-    .PARAMETER IpAddress
-        The IP address for which to retrieve related objects.
+    .PARAMETER Domain
+        The domain for which to retrieve related objects.
     .PARAMETER Relationship
         The type of relationship to query. Press Tab to see a list of valid options.
     .PARAMETER Limit
@@ -14,36 +14,43 @@ function Get-IpAddressObjects {
     .PARAMETER OutFile
         Specifies a file path to save the JSON report to. If omitted, results are written to the console.
     .EXAMPLE
-        Get-IpAddressObjects -IpAddress 8.8.8.8 -Relationship resolutions
-        # Retrieves all DNS resolutions for 8.8.8.8 and displays them in the console.
-
+        Get-DomainObjectDescriptors -Domain google.com -Relationship resolutions
     .EXAMPLE
-        Get-IpAddressObjects -IpAddress 1.1.1.1 -Relationship communicating_files -Limit 100 -OutFile "C:\Reports\cf.json"
-        # Retrieves all communicating files for 1.1.1.1, fetching 100 at a time, and saves the full results to a file.
+        Get-DomainObjectDescriptors -Domain google.com -Relationship communicating_files -Limit 100 -OutFile "C:\Reports\cf.json"
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage="IP Address to get objects on.")]
-        [ipaddress]$IpAddress,
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true, HelpMessage="Domain to get objects on.")]
+        [string]$Domain,
 
-        [Parameter(Mandatory=$true, HelpMessage="Relationships to search for: https://docs.virustotal.com/reference/ip-object#relationships")]
+        [Parameter(Mandatory=$true, HelpMessage="Relationships to search for: https://docs.virustotal.com/reference/domains-object#relationships")]
         [ValidateSet(
+            'caa_records',
+            'cname_records',
             'comments',
             'communicating_files',
             'downloaded_files',
             'graphs',
             'historical_ssl_certificates',
             'historical_whois',
+            'immediate_parent',
+            'mx_records',
+            'ns_records',
+            'parent',
+            'referrer_files',
             'related_comments',
             'related_references',
             'related_threat_actors',
-            'referrer_files',
             'resolutions',
-            'urls'
+            'soa_records',
+            'siblings',
+            'subdomains',
+            'urls',
+            'user_votes'
         )]
         [string]$Relationship,
 
-        [Parameter(Mandatory=$false, HelpMessage="Maximum number of objects to retrieve from IP address.")]
+        [Parameter(Mandatory=$false, HelpMessage="Maximum number of objects to retrieve from the domain.")]
         [int]$Limit = 10,
 
         [Parameter(Mandatory=$false, HelpMessage="File path to store results to.")]
@@ -62,12 +69,12 @@ function Get-IpAddressObjects {
         $cursor = $null
         $pageCount = 1
 
-        Write-Host "Fetching relationship '$Relationship' for '$IpAddress'..."
+        Write-Host "Fetching relationship '$Relationship' for '$Domain'..."
 
         do {
             # Construct the base URI for the API request.
-            $uriTemplate = 'https://www.virustotal.com/api/v3/ip_addresses/{0}/{1}?limit={2}'
-            $baseUri = $uriTemplate -f $IpAddress.IPAddressToString, $Relationship, $Limit
+            $uriTemplate = 'https://www.virustotal.com/api/v3/domains/{0}/relationships/{1}?limit={2}'
+            $baseUri = $uriTemplate -f $Domain, $Relationship, $Limit
             # If a cursor exists from a previous iteration, add it to the URI.
             $uri = if ($cursor) { "$baseUri&cursor=$cursor" } else { $baseUri }
 
@@ -98,11 +105,10 @@ function Get-IpAddressObjects {
             Write-Host "Results successfully saved to '$OutFile'."
         }
         else {
-            # Output the combined results to the pipeline.
             $allResults | ConvertTo-Json
         }
     }
     catch {
-        Write-Error "Failed to get related objects for '$IpAddress'. Error: $_"
+        Write-Error "Failed to get related objects for '$Domain'. Error: $_"
     }
 }
