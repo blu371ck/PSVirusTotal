@@ -275,3 +275,32 @@ Get-DomainReport -Domain "github.com" -OutFile "C:\Reports\github_report.json"
 ```
 
 ---
+### `Get-DomainComments`
+Retrieves community comments for a given domain from the VirusTotal API. This command automatically handles API pagination to retrieve comments up to the specified limit.
+
+### Syntax
+```
+Get-DomainComments -Domain <String> [-Limit <Int32>] [-OutFile <String>]
+```
+### Parameters
+- `-Domain` (Required)
+The domain name for which you want to retrieve comments (e.g., "https://www.google.com/search?q=google.com").
+- `-Limit` (Optional)
+The maximum number of comments to retrieve.
+Default value: 10
+- `-OutFile` (Optional)
+Specifies a file path where the results should be saved. If provided, the full JSON response will be written to this file. If omitted, the results are returned as PowerShell objects to the console.
+
+### Examples
+1. Get the 5 most recent comments
+This command retrieves a maximum of 5 comments for the domain google.com and displays them in the console.
+```powershell
+Get-DomainComments -Domain "google.com" -Limit 5
+```
+2. Get the default number of comments and save to a file
+This command retrieves the 10 most recent comments for the domain github.com and saves the complete results to a JSON file.
+```powershell
+Get-DomainComments -Domain "github.com" -OutFile "C:\Reports\github_comments.json"
+```
+
+---
