@@ -1,18 +1,16 @@
-function Get-IpAddressReport {
+function Get-IpAddressVotes {
    <#
     .SYNOPSIS
-        Retrieves a VirusTotal report for provided IP address.
+        Retrieves VirusTotal vote objects from an IP address.
     .DESCRIPTION
-        This function requests an IP address report from VirusTotal.
+        This function requests an IP address Votes object from VirusTotal.
     .PARAMETER IpAddress
         The IP address to request a VirusTotal report for.
+    .PARAMETER OutFile
+        A file path to save the response in.
     .EXAMPLE
-        Get-IpAddressReport -IpAddress <IP_ADDRESS_HERE>
-        # This command retrieves the report for the IP address <IP_ADDRESS_HERE>
-    .EXAMPLE
-        Get-IpAddressReport -IpAddress <IP_ADDRESS_HERE> -OutFile <FILE_LOCATION_HERE>
-        # This command retrieves the report for the IP address <IP_ADDRESS_HERE> and
-        # saves it in <FILE_LOCATION_HERE>
+        Get-IpAddressVotes -IpAddress <IP_ADDRESS_HERE>
+        # This command retrieves the vote objects for the IP address <IP_ADDRESS_HERE>
     #> 
     [CmdletBinding()]
     param(
@@ -33,8 +31,8 @@ function Get-IpAddressReport {
         }
 
         # Build the URI and notify the user request is about to begin.
-        $uri = "https://www.virustotal.com/api/v3/ip_addresses/$IpAddress"
-        Write-Host "Fetching report from VirusTotal for '$IpAddress'..."
+        $uri = "https://www.virustotal.com/api/v3/ip_addresses/$IpAddress/votes"
+        Write-Host "Fetching vote objects from VirusTotal for '$IpAddress'..."
         
         # Use Invoke-RestMethod to automatically parse response JSON
         $responseObject = Invoke-RestMethod -Uri $uri -Method GET -Headers $headers

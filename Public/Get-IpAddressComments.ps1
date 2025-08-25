@@ -24,7 +24,7 @@ function Get-IpAddressComments {
 
     try {
         # Retrieve the API key from private helper function.
-        $apiKey = Get-VTApiKey
+        $apiKey = Get-ApiKey
 
         # documentation on this api added the "accept: application/json" so we do the same.
         $headers = @{
